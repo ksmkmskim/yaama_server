@@ -1,7 +1,9 @@
 package yaama;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -43,31 +45,61 @@ public class PostUpController extends HttpServlet {
 		p.setPost_user(udao.getUser(request.getParameter("post_user")));
 		p.setPost_text(request.getParameter("post_text"));
 		p.setPost_date(request.getParameter("post_date"));
-		p.setPost_location(request.getParameter("post_location"));
+		p.setPost_location(request.getParameter("post_location"));	// location 정보가 단순 구만 표시한다는 가정 하에 개발함(대덕구, 중구 등등)
 		
 		if(!bf.check(p.getPost_text())) {
 			KeywordDAO kdao = new KeywordDAO();
-			p.setPost_accept(true);
 			List<String> keywords = ke.extract(p.getPost_text());
+			List<Keyword> kwords = new ArrayList<>();
+			
+			p.setPost_accept(true);
+			p.setPost_response(String.join(", ", keywords));
 			
 			for(String k : keywords) {
 				Keyword kword = kdao.getKeyword(k);
 				if(kword != null) {
-					kword.getLcnt();
-					kword.getRcnt();
+					kword.getLcnt().put(p.getPost_location(), kword.getLcnt().get(p.getPost_location()) + 1);
+					for(String rk : keywords) {
+						if(rk != k) {
+							kword.getRcnt().put(rk, kword.getRcnt().get(rk) != null ? kword.getRcnt().get(rk) + 1 : 1);
+						}
+					}
 				} else {
+					HashMap<String, Integer> lcnt = new HashMap();
+					lcnt.put("유성구", 0);
+					lcnt.put("대덕구", 0);
+					lcnt.put("동구", 0);
+					lcnt.put("서구", 0);
+					lcnt.put("중구", 0);
+					lcnt.put(p.getPost_location(), 1);
+					
+					HashMap<String, Integer> rcnt = new HashMap();
+					for(String rk : keywords) {
+						if(rk != k) {
+							rcnt.put(rk, 1);
+						}
+					}
+					
 					kword = new Keyword();
 					kword.setKeyword(k);
-					kword.setLcnt(null);
-					kword.setRcnt(null);
+					kword.setLcnt(lcnt);
+					kword.setRcnt(rcnt);
 				}
+				kwords.add(kword);
+				kdao.upsertKeyword(kword);
 			}
+			
+			p.setKeywords(kwords);
+			
 		} else {
 			p.setPost_accept(false);
 			p.setPost_response("부적절한 언어 사용");
 			p.setKeywords(null);	// null or 빈 리스트
 		}
+		String result = om.writeValueAsString(p);
+		response.getWriter().write(result);
 		
+		pdao.addPost(p);
 	}
 
 	/**
