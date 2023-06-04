@@ -94,11 +94,12 @@ public class PostDAO {
 			if(rs.next()) {
 				p = new Post();
 				p.setPost_id(pid);
-				p.setPost_text(rs.getString(""));
-				p.setPost_date(rs.getString(""));
-				p.setPost_location(rs.getString(""));
-				p.setPost_accept(rs.getBoolean(""));
-				p.setPost_response(rs.getString(""));
+				p.setPost_user(udao.getUser(rs.getString("uid")));
+				p.setPost_text(rs.getString("ptext"));
+				p.setPost_date(rs.getString("pdate"));
+				p.setPost_location(rs.getString("ploc"));
+				p.setPost_accept(rs.getBoolean("pacpt"));
+				p.setPost_response(rs.getString("pres"));
 				p.setKeywords(kdao.getPostKeyword(pid));
 			}
 			
