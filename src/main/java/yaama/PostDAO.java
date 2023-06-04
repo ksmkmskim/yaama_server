@@ -37,8 +37,8 @@ public class PostDAO {
 	
 	public void addPost(Post p) {
 		open();
-		String sql_post = "";		//Post에 추가
-		String sql_keyword = "";	//PostKeyword에 추가
+		String sql_post = "insert into Post_table(uid, ptext, pdate, ploc, pacpt, pres) values(?, ?, ?, ?, ?, ?)";		//Post에 추가
+		String sql_keyword = "insert into PostKeyword_table(pid, kword) values(LAST_INSERT_ID(), ?)";	//PostKeyword에 추가
 		
 		try{
 			pstmt = conn.prepareStatement(sql_post);
@@ -51,10 +51,8 @@ public class PostDAO {
 			pstmt.executeUpdate();
 			
 			pstmt = conn.prepareStatement(sql_keyword);
-			pstmt.setLong(1, p.getPost_id());
-			
 			for(Keyword k : p.getKeywords()) {
-				pstmt.setString(2, k.getKeyword());
+				pstmt.setString(1, k.getKeyword());
 				pstmt.executeUpdate();
 			}
 			
@@ -65,22 +63,13 @@ public class PostDAO {
 		}
 	}
 	
-	public void deletePost(long pid) {
+	public void deletePost(Post p) {
 		open();
-		String sql_keyword = "";	// PostKeyword에서 keyword 목록 받아옴
-		String sql_post = "";		// post 지움
-		KeywordDAO kdao = new KeywordDAO();
+		String sql = "delete * from Post_table where pid=?";		// post 지움
 		
 		try	{
-			pstmt = conn.prepareStatement(sql_keyword);
-			pstmt.setLong(1, pid);
-			ResultSet rs = pstmt.executeQuery();
-			
-			while(rs.next()) {
-				kdao.deleteKeyword(rs.getString("kword"));
-			}
-			
-			pstmt = conn.prepareStatement(sql_post);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, p.getPost_id());
 			pstmt.executeUpdate();
 			
 		} catch(Exception e) {
@@ -92,9 +81,10 @@ public class PostDAO {
 	
 	public Post getPost(long pid) {
 		open();
-		String sql = "";
+		String sql = "select * from Post_table where pid=?";
 		Post p = null;
 		UserDAO udao = new UserDAO();
+		KeywordDAO kdao = new KeywordDAO();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -109,7 +99,7 @@ public class PostDAO {
 				p.setPost_location(rs.getString(""));
 				p.setPost_accept(rs.getBoolean(""));
 				p.setPost_response(rs.getString(""));
-				p.setKeywords(null);
+				p.setKeywords(kdao.getPostKeyword(pid));
 			}
 			
 		} catch(Exception e) {
@@ -123,8 +113,8 @@ public class PostDAO {
 	
 	public List<Post> getPostLog(String uid){
 		open();
-		String sql = "";
-		List<Post> posts = new ArrayList();
+		String sql = "select * from Post_table where uid=?";
+		List<Post> posts = new ArrayList<>();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -132,7 +122,7 @@ public class PostDAO {
 			ResultSet rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				posts.add(this.getPost(rs.getInt("post_id")));
+				posts.add(this.getPost(rs.getLong("pid")));
 			}
 			
 		} catch(Exception e) {

@@ -37,7 +37,7 @@ public class UserDAO {
 	
 	public void addUser(User u) {
 		open();
-		String sql = "";
+		String sql = "insert into User_table(uid, upw, uname, uaddr, utel, uimg) values(?, ?, ?, ?, ?, ?)";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -58,7 +58,7 @@ public class UserDAO {
 	
 	public void deleteUser(String uid) {
 		open();
-		String sql = "";
+		String sql = "delete * from User_table where uid=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -73,7 +73,7 @@ public class UserDAO {
 	
 	public User getUser(String uid) {
 		open();
-		String sql_user = "";
+		String sql_user = "select * from User_table where uid=?";
 		User u = null;
 		PostDAO pdao = new PostDAO();
 		
@@ -85,11 +85,11 @@ public class UserDAO {
 			if(rs.next()) {
 				u = new User();
 				u.setUser_id(uid);
-				u.setUser_pw(rs.getString(""));
-				u.setUser_name(rs.getString(""));
-				u.setUser_addr(rs.getString(""));
-				u.setUser_tel(rs.getString(""));
-				u.setUser_profile_img(rs.getString(""));
+				u.setUser_pw(rs.getString("upw"));
+				u.setUser_name(rs.getString("uname"));
+				u.setUser_addr(rs.getString("uaddr"));
+				u.setUser_tel(rs.getString("utel"));
+				u.setUser_profile_img(rs.getString("uimg"));
 				u.setPosts(pdao.getPostLog(uid));
 			}
 			
