@@ -85,6 +85,7 @@ public class PostUpController extends HttpServlet {
 					kword.setLcnt(lcnt);
 					kword.setRcnt(rcnt);
 				}
+				kword.setTotal_count();	// 굳이 필요하진 않음
 				kwords.add(kword);
 				kdao.upsertKeyword(kword);
 			}

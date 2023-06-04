@@ -7,22 +7,21 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+
 /**
- * Servlet implementation class LoadKeywordsController
+ * Servlet implementation class PostDeleteController
  */
-@WebServlet("/LoadKeywords")
-public class LoadKeywordsController extends HttpServlet {
+@WebServlet("/PostDelete")
+public class PostDeleteController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LoadKeywordsController() {
+    public PostDeleteController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,15 +32,28 @@ public class LoadKeywordsController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("application/x-json; charset=UTF-8");
-		ObjectMapper om = new ObjectMapper();
+		PostDAO pdao = new PostDAO();
 		KeywordDAO kdao = new KeywordDAO();
 		
-		List<Keyword> keywords = kdao.getAllKeyword();
-		for(Keyword k : keywords) {
+		Post p = pdao.getPost(Integer.parseInt(request.getParameter("post_id")));
+		
+		List<Keyword> kwords = kdao.getPostKeyword(Integer.parseInt(request.getParameter("post_id")));
+		for(Keyword k : kwords) {
+			k.getLcnt().put(p.getPost_location(), k.getLcnt().get(p.getPost_location())-1);
 			k.setTotal_count();
+			if(k.getTotal_count() == 0) {
+				kdao.deleteKeyword(k.getKeyword());
+			} else {
+				for(Keyword rk : kwords) {
+					if(rk.getKeyword() != k.getKeyword()) {
+						k.getRcnt().put(rk.getKeyword(), k.getRcnt().get(rk.getKeyword())-1);
+					}
+				}
+			}
 		}
-		String result = om.writeValueAsString(keywords);
-		response.getWriter().write(result);
+		
+		pdao.deletePost(p.getPost_id());
+		response.getWriter().write("다음 게시글 삭제완료.\n" + p.getPost_text());
 	}
 
 	/**
