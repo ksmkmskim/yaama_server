@@ -19,23 +19,23 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Git/Capstone_23_yaama_server/jep-4.1.1/build/java/jep-4.1.1.jar">
+	<classpathentry kind="lib" path="lib/jep-4.1.1.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Git/Capstone_23_yaama_server/jep-4.1.1/build/java/jep-4.1.1-sources.jar">
+	<classpathentry kind="lib" path="lib/jep-4.1.1-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Git/Capstone_23_yaama_server/jep-4.1.1/build/java/jep-4.1.1-test.jar">
+	<classpathentry kind="lib" path="lib/jep-4.1.1-test.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Git/Capstone_23_yaama_server/jep-4.1.1/build/java/jep-4.1.1-test-sources.jar">
+	<classpathentry kind="lib" path="lib/jep-4.1.1-test-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
