@@ -31,13 +31,15 @@ public class SignUpController extends HttpServlet {
 		response.setContentType("application/x-json; charset=UTF-8");
 		User u = new User();
 		UserDAO udao = new UserDAO();
+		System.out.println(request.getParameter("user_id"));
+		System.out.println(request.getHeader("Accept"));
 		
 		u.setUser_id(request.getParameter("user_id"));
 		u.setUser_pw(request.getParameter("user_pw"));
 		u.setUser_name(request.getParameter("user_name"));
 		u.setUser_addr(request.getParameter("user_addr"));
 		u.setUser_tel(request.getParameter("user_tel"));
-		u.setUser_profile_img(null);		//프로필 사진 업로드 구현 보류
+		u.setUser_profile_img("");		//프로필 사진 업로드 구현 보류
 		
 		udao.addUser(u);
 		

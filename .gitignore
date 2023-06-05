@@ -1,1 +1,6 @@
 /target/
+.classpath
+.settings/org.eclipse.wst.common.project.facet.core.xml
+target/classes/yaama/KeywordDAO.class
+target/classes/yaama/PostDAO.class
+target/classes/yaama/UserDAO.class
