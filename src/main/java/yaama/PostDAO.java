@@ -13,7 +13,7 @@ public class PostDAO {
 	PreparedStatement pstmt;
 	
 	final String JDBC_DRIVER = "org.h2.Driver";
-	final String JDBC_URL = "jdbc:h2:tcp://localhost/C:\\Users\\Administrator\\Desktop\\4-1\\capstone\\database\\yaama";
+	final String JDBC_URL = System.getenv("DATABASE");
 	final String JDBC_USER = "admin";
 	final String JDBC_PASSWD = "admin";
 	

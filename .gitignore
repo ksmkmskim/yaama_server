@@ -4,3 +4,5 @@
 target/classes/yaama/KeywordDAO.class
 target/classes/yaama/PostDAO.class
 target/classes/yaama/UserDAO.class
+target/m2e-wtp/web-resources/META-INF/maven/yaama_server/yaama_server/pom.properties
+*.class
