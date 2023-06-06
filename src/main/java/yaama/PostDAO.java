@@ -65,7 +65,7 @@ public class PostDAO {
 	
 	public void deletePost(long pid) {
 		open();
-		String sql = "delete * from Post_table where pid=?";		// post 지움
+		String sql = "delete from Post_table where pid=?";		// post 지움
 		
 		try	{
 			pstmt = conn.prepareStatement(sql);

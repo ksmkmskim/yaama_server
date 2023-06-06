@@ -58,7 +58,7 @@ public class UserDAO {
 	
 	public void deleteUser(String uid) {
 		open();
-		String sql = "delete * from User_table where uid=?";
+		String sql = "delete from User_table where uid=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);

@@ -74,7 +74,7 @@ public class KeywordDAO {
 	
 	public void deleteKeyword(String kword) {
 		open();
-		String sql = "delete * from Keyword_table where kword=?";
+		String sql = "delete from Keyword_table where kword=?";
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
