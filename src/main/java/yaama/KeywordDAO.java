@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.HashMap;
 
 public class KeywordDAO {
@@ -36,17 +37,27 @@ public class KeywordDAO {
 		}
 	}
 	
+	public void insertKeyword(String kword) {
+		open();
+		String sql = "insert into Keyword_table(kword) values(?)";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, kword);
+			pstmt.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+	}
+	
 	public void upsertKeyword(Keyword k) {
 		open();
-		String sql_keyword = "insert ignore into Keyword_table(kword) values(?)";
 		String sql_loc = "insert into KeywordLoc_table(kloc, kword, lcnt) values(?, ?, ?) on duplicate key update lcnt=?";
 		String sql_rel = "insert into KeywordRel_table(kword, rkword, rcnt) values(?, ?, ?) on duplicate key update rcnt=?";
 		
 		try {
-			pstmt = conn.prepareStatement(sql_keyword);
-			pstmt.setString(1, k.getKeyword());
-			pstmt.executeUpdate();
-			
 			pstmt = conn.prepareStatement(sql_loc);
 			pstmt.setString(2, k.getKeyword());
 			for(String loc : k.getLcnt().keySet()) {
@@ -60,8 +71,8 @@ public class KeywordDAO {
 			pstmt.setString(1, k.getKeyword());
 			for(String rel : k.getRcnt().keySet()) {
 				pstmt.setString(2, rel);
-				pstmt.setInt(3, k.getLcnt().get(rel));
-				pstmt.setInt(4, k.getLcnt().get(rel));
+				pstmt.setInt(3, k.getRcnt().get(rel));
+				pstmt.setInt(4, k.getRcnt().get(rel));
 				pstmt.executeUpdate();
 			}
 			
@@ -112,10 +123,10 @@ public class KeywordDAO {
 		return k;
 	}
 	
-	private HashMap<String, Integer> getKeywordLoc(String kword){
+	private Map<String, Integer> getKeywordLoc(String kword){
 		open();
 		String sql = "select * from KeywordLoc_table where kword=?";
-		HashMap<String, Integer> lcnt = new HashMap<>();
+		Map<String, Integer> lcnt = new HashMap<>();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -137,10 +148,10 @@ public class KeywordDAO {
 		return lcnt;
 	}
 	
-	private HashMap<String, Integer> getKeywordRel(String kword){
+	private Map<String, Integer> getKeywordRel(String kword){
 		open();
 		String sql = "select * from KeywordRel_table where kword=?";
-		HashMap<String, Integer> rcnt = new HashMap<>();
+		Map<String, Integer> rcnt = new HashMap<>();
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -186,7 +197,7 @@ public class KeywordDAO {
 	
 	public List<Keyword> getAllKeyword() {
 		open();
-		String sql = "select * from PostKeyword_table";
+		String sql = "select * from Keyword_table";
 		List<Keyword> pKeywords = new ArrayList<>();
 		
 		try {

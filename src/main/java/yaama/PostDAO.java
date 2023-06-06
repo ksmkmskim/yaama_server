@@ -42,9 +42,9 @@ public class PostDAO {
 		
 		try{
 			pstmt = conn.prepareStatement(sql_post);
-			pstmt.setString(1, p.getPost_user().getUser_id());
+			pstmt.setString(1, p.getPost_user());
 			pstmt.setString(2,p.getPost_text());
-			pstmt.setString(3, p.getPost_date());
+			pstmt.setString(3,p.getPost_date());
 			pstmt.setString(4, p.getPost_location());
 			pstmt.setBoolean(5, p.isPost_accept());
 			pstmt.setString(6, p.getPost_response());
@@ -94,7 +94,7 @@ public class PostDAO {
 			if(rs.next()) {
 				p = new Post();
 				p.setPost_id(pid);
-				p.setPost_user(udao.getUser(rs.getString("uid")));
+				p.setPost_user(rs.getString("uid"));
 				p.setPost_text(rs.getString("ptext"));
 				p.setPost_date(rs.getString("pdate"));
 				p.setPost_location(rs.getString("ploc"));

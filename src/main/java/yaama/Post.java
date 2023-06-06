@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Post {
 	private long post_id;
-	private User post_user;
+	private String post_user;
 	private String post_text;
 	private String post_date;
 	private String post_location;
@@ -19,10 +19,10 @@ public class Post {
 	public void setPost_id(long post_id) {
 		this.post_id = post_id;
 	}
-	public User getPost_user() {
+	public String getPost_user() {
 		return post_user;
 	}
-	public void setPost_user(User post_user) {
+	public void setPost_user(String post_user) {
 		this.post_user = post_user;
 	}
 	public String getPost_text() {

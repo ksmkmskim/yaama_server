@@ -1,12 +1,13 @@
 package yaama;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Keyword {
 	private String keyword;
 	private int total_count;
-	private HashMap<String, Integer> lcnt;	// location : count 딕셔너리
-	private HashMap<String, Integer> rcnt;	// rkeyword : count 딕셔너리
+	private Map<String, Integer> lcnt;	// location : count 딕셔너리
+	private Map<String, Integer> rcnt;	// rkeyword : count 딕셔너리
 	
 	public String getKeyword() {
 		return keyword;
@@ -24,16 +25,16 @@ public class Keyword {
 		}
 		this.total_count = total;
 	}
-	public HashMap<String, Integer> getLcnt() {
+	public Map<String, Integer> getLcnt() {
 		return lcnt;
 	}
-	public void setLcnt(HashMap<String, Integer> lcnt) {
+	public void setLcnt(Map<String, Integer> lcnt) {
 		this.lcnt = lcnt;
 	}
-	public HashMap<String, Integer> getRcnt() {
+	public Map<String, Integer> getRcnt() {
 		return rcnt;
 	}
-	public void setRcnt(HashMap<String, Integer> rcnt) {
+	public void setRcnt(Map<String, Integer> rcnt) {
 		this.rcnt = rcnt;
 	}
 }

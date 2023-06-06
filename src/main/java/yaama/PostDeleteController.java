@@ -45,10 +45,11 @@ public class PostDeleteController extends HttpServlet {
 				kdao.deleteKeyword(k.getKeyword());
 			} else {
 				for(Keyword rk : kwords) {
-					if(rk.getKeyword() != k.getKeyword()) {
+					if(!rk.getKeyword().equals(k.getKeyword())) {
 						k.getRcnt().put(rk.getKeyword(), k.getRcnt().get(rk.getKeyword())-1);
 					}
 				}
+				kdao.upsertKeyword(k);
 			}
 		}
 		

@@ -37,12 +37,17 @@ public class LoginController extends HttpServlet {
 		
 		User u = udao.getUser(uid);
 		
-		if(u.getUser_pw() == upw) {
-			String result = om.writeValueAsString(u);
-			response.getWriter().write(result);
+		if(u != null) {
+			if(u.getUser_pw().equals(upw)) {
+				String result = om.writeValueAsString(u);
+				response.getWriter().write(result);
+			} else {
+				response.getWriter().write("로그인 실패");
+			}
 		} else {
-			response.getWriter().write("");
+			response.getWriter().write("로그인 실패");
 		}
+		
 	}
 
 	/**

@@ -3,7 +3,10 @@ package yaama;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,20 +39,16 @@ public class PostUpController extends HttpServlet {
 		response.setContentType("application/x-json; charset=UTF-8");
 		ObjectMapper om = new ObjectMapper();
 		Post p = new Post();
-		UserDAO udao = new UserDAO();
 		PostDAO pdao = new PostDAO();
-		KeywordExtractor ke = new KeywordExtractor();
 		BadWordFiltering bf = new BadWordFiltering();
-		
-		p.setPost_id(Integer.parseInt(request.getParameter("post_id")));
-		p.setPost_user(udao.getUser(request.getParameter("post_user")));
+		KeywordExtractor kext = new KeywordExtractor();
+		p.setPost_user(request.getParameter("post_user"));
 		p.setPost_text(request.getParameter("post_text"));
-		p.setPost_date(request.getParameter("post_date"));
 		p.setPost_location(request.getParameter("post_location"));	// location 정보가 단순 구만 표시한다는 가정 하에 개발함(대덕구, 중구 등등)
 		
 		if(!bf.check(p.getPost_text())) {
 			KeywordDAO kdao = new KeywordDAO();
-			List<String> keywords = ke.extract(p.getPost_text());
+			List<String> keywords = kext.extract(p.getPost_text());
 			List<Keyword> kwords = new ArrayList<>();
 			
 			p.setPost_accept(true);
@@ -65,21 +64,24 @@ public class PostUpController extends HttpServlet {
 						}
 					}
 				} else {
-					HashMap<String, Integer> lcnt = new HashMap();
-					lcnt.put("유성구", 0);
-					lcnt.put("대덕구", 0);
-					lcnt.put("동구", 0);
-					lcnt.put("서구", 0);
-					lcnt.put("중구", 0);
+					kdao.insertKeyword(k);
+					
+					Map<String, Integer> lcnt = new HashMap<>(){{;
+					put("유성구", 0);
+					put("대덕구", 0);
+					put("동구", 0);
+					put("서구", 0);
+					put("중구", 0);
+					}};
 					lcnt.put(p.getPost_location(), 1);
 					
-					HashMap<String, Integer> rcnt = new HashMap();
+					Map<String, Integer> rcnt = new HashMap<>() {{;
 					for(String rk : keywords) {
 						if(rk != k) {
-							rcnt.put(rk, 1);
+							put(rk, 1);
 						}
 					}
-					
+					}};
 					kword = new Keyword();
 					kword.setKeyword(k);
 					kword.setLcnt(lcnt);
@@ -87,6 +89,9 @@ public class PostUpController extends HttpServlet {
 				}
 				kword.setTotal_count();	// 굳이 필요하진 않음
 				kwords.add(kword);
+			}
+			
+			for(Keyword kword : kwords) {
 				kdao.upsertKeyword(kword);
 			}
 			
@@ -97,6 +102,10 @@ public class PostUpController extends HttpServlet {
 			p.setPost_response("부적절한 언어 사용");
 			p.setKeywords(null);	// null or 빈 리스트
 		}
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		p.setPost_date(formatter.format(date));
+		
 		String result = om.writeValueAsString(p);
 		response.getWriter().write(result);
 		
