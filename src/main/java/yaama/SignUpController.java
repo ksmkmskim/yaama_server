@@ -31,8 +31,6 @@ public class SignUpController extends HttpServlet {
 		response.setContentType("application/x-json; charset=UTF-8");
 		User u = new User();
 		UserDAO udao = new UserDAO();
-		System.out.println(request.getParameter("user_id"));
-		System.out.println(request.getHeader("Accept"));
 		
 		u.setUser_id(request.getParameter("user_id"));
 		u.setUser_pw(request.getParameter("user_pw"));
