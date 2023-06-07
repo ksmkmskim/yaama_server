@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class PostDAO {
 	Connection conn = null;
@@ -133,5 +135,31 @@ public class PostDAO {
 		}
 		
 		return posts;
+	}
+	
+	public Map<String, Integer> getPostCount(String loc){
+		open();
+		String sql = "select count(*) from Post_table where ploc=?";
+		Map<String, Integer> lcnt = new HashMap<>();
+		int cnt = 0;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, loc);
+			ResultSet rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				cnt = rs.getInt(1);
+			}
+			
+			lcnt.put(loc, cnt);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		
+		return lcnt;
 	}
 }
