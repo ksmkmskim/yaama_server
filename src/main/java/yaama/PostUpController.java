@@ -100,7 +100,7 @@ public class PostUpController extends HttpServlet {
 		} else {
 			p.setPost_accept(false);
 			p.setPost_response("부적절한 언어 사용");
-			p.setKeywords(null);	// null or 빈 리스트
+			p.setKeywords(new ArrayList<>());	// null or 빈 리스트
 		}
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
